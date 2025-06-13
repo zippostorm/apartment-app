@@ -13,6 +13,7 @@ import {
   setFormData,
   resetFormData,
   createApartment,
+  getAllApartment,
 } from "../store/apartment/apartmentSlice";
 import { toast } from "react-hot-toast";
 
@@ -37,6 +38,7 @@ const ApartmentModal = ({ EditMode }) => {
         document.getElementById("apartment_modal").close();
         toast.success("Apartment created successfully");
         dispatch(resetFormData());
+        dispatch(getAllApartment());
         resetFileInputRef();
       } else {
         toast.error("Error creating apartment:", error);
@@ -145,14 +147,17 @@ const ApartmentModal = ({ EditMode }) => {
                   type="number"
                   inputMode="numeric"
                   min={0}
+                  max={10000000}
                   step="1000"
-                  maxLength={90}
                   placeholder="Enter apartment price"
                   className="input input-bordered w-full pl-10 pr-8 py-3 focus:input-primary transition-colors duration-200"
                   value={formData.price}
-                  onChange={(e) =>
-                    dispatch(setFormData({ price: e.target.value }))
-                  }
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    if (value <= 10000000) {
+                      dispatch(setFormData({ price: e.target.value }));
+                    }
+                  }}
                 />
               </div>
             </div>
