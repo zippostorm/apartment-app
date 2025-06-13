@@ -5,6 +5,8 @@ import { Apartment } from "../models/apartment.model.js";
 export const getAllApartment = async (req, res) => {
   try {
     const { sortBy } = req.query;
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 6;
 
     let sortQuery = { createdAt: -1 };
 
@@ -13,8 +15,12 @@ export const getAllApartment = async (req, res) => {
     } else if (sortBy === "price") {
       sortQuery = { price: -1 };
     }
-    const apartments = await Apartment.find({}).sort(sortQuery);
-    res.status(200).json({ success: true, apartments });
+    const apartments = await Apartment.find({})
+      .sort(sortQuery)
+      .limit(limit)
+      .skip(startIndex);
+    const totalApartment = await Apartment.countDocuments();
+    res.status(200).json({ success: true, apartments, totalApartment });
   } catch (error) {
     res.status(500).json({
       success: false,

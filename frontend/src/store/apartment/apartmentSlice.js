@@ -65,11 +65,11 @@ export const deleteApartmentImage = createAsyncThunk(
 
 export const getAllApartment = createAsyncThunk(
   "apartment/getAll",
-  async (sort) => {
+  async ({ sort, startIndex, limit = 6 } = {}) => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/apartment`,
       {
-        params: { sortBy: sort },
+        params: { sortBy: sort, startIndex, limit },
       }
     );
     return response.data;
@@ -117,12 +117,20 @@ const apartmentSlice = createSlice({
         state.error = "Error creating apartment";
       })
       .addCase(getAllApartment.pending, (state) => {
-        state.loading = true;
         state.error = null;
       })
       .addCase(getAllApartment.fulfilled, (state, action) => {
         state.loading = false;
-        state.apartments = action.payload.apartments;
+        if (action.meta.arg?.startIndex >= 6) {
+          // Якщо це не перше завантаження — додаємо нові
+          state.apartments = [
+            ...state.apartments,
+            ...action.payload.apartments,
+          ];
+        } else {
+          // Якщо перше — просто замінюємо
+          state.apartments = action.payload.apartments;
+        }
         state.error = null;
       })
       .addCase(getAllApartment.rejected, (state) => {

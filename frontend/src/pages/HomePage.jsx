@@ -13,25 +13,30 @@ const HomePage = () => {
 
   const [sort, setSort] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
 
   const { apartments, error, loading } = useSelector(
     (state) => state.apartment
   );
 
+  const handleShowMore = async () => {
+    const numberOfApartments = apartments.length;
+    const startIndex = numberOfApartments;
+
+    dispatch(getAllApartment({ sort, startIndex })).then((data) => {
+      if (data?.payload?.apartments?.length < 6) setShowMore(false);
+    });
+  };
+
   useEffect(() => {
-    dispatch(getAllApartment(sort));
+    dispatch(getAllApartment({ sort })).then((data) => {
+      if (data?.payload?.apartments?.length >= 6) setShowMore(true);
+    });
     dispatch(resetCurrentApartment());
   }, [dispatch, sort]);
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <button className="btn btn-ghost btn-circle">
-          <RefreshCwIcon
-            className="size-5"
-            onClick={() => dispatch(getAllApartment())}
-          />
-        </button>
-
+      <div className="flex justify-end items-center mb-8">
         <div
           className="dropdown dropdown-end"
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
@@ -106,11 +111,24 @@ const HomePage = () => {
           <div className="loading loading-spinner loading-lg" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {apartments.map((apartment) => (
-            <ApartmentCard key={apartment._id} apartment={apartment} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {apartments.map((apartment) => (
+              <ApartmentCard key={apartment._id} apartment={apartment} />
+            ))}
+          </div>
+
+          {showMore && (
+            <div className="flex justify-center mt-8">
+              <button
+                className="btn btn-primary"
+                onClick={() => handleShowMore()}
+              >
+                Show more
+              </button>
+            </div>
+          )}
+        </>
       )}
     </main>
   );
