@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import {
+  deleteApartmentImage,
+  getApartmentById,
+} from "../store/apartment/apartmentSlice";
 
 const ImageSlider = ({ images, apartmentId }) => {
+  const dispatch = useDispatch();
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (!images || images.length === 0) return null;
@@ -21,6 +28,29 @@ const ImageSlider = ({ images, apartmentId }) => {
     setCurrentIndex(index);
   };
 
+  const handleDelete = async () => {
+    if (images.length === 1) {
+      toast.error(
+        "Apartment must have at least one image. Please add another first."
+      );
+      return;
+    }
+
+    dispatch(
+      deleteApartmentImage({
+        public_id: images[currentIndex].public_id,
+        id: apartmentId,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        toast.success("Image deleted successfully");
+        dispatch(getApartmentById(apartmentId));
+      } else {
+        toast.error("Error deleting image:", error);
+      }
+    });
+  };
+
   return (
     <div className="relative w-full min-h-[500px] h-full overflow-hidden rounded-lg shadow-lg bg-base-100">
       <img
@@ -30,6 +60,7 @@ const ImageSlider = ({ images, apartmentId }) => {
       />
 
       <button
+        onClick={handleDelete}
         className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-full z-10"
         title="Delete this image"
       >
