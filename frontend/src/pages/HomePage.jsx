@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -11,15 +11,17 @@ import ApartmentCard from "../components/ApartmentCard";
 const HomePage = () => {
   const dispatch = useDispatch();
 
+  const [sort, setSort] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   const { apartments, error, loading } = useSelector(
     (state) => state.apartment
   );
 
-  console.log(apartments);
   useEffect(() => {
-    dispatch(getAllApartment());
+    dispatch(getAllApartment(sort));
     dispatch(resetCurrentApartment());
-  }, [dispatch]);
+  }, [dispatch, sort]);
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
@@ -30,21 +32,56 @@ const HomePage = () => {
           />
         </button>
 
-        <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn m-1 btn-accent">
+        <div
+          className="dropdown"
+          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+        >
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn m-1 btn-accent"
+            onClick={() => setIsOpen((prev) => !prev)}
+          >
             Filters
           </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2"
-          >
-            <li>
-              <a>Item 1</a>
-            </li>
-            <li>
-              <a>Item 2</a>
-            </li>
-          </ul>
+
+          {isOpen && (
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2"
+            >
+              <li>
+                <button
+                  className={`${
+                    sort === "" ? "bg-accent text-white font-bold" : ""
+                  }`}
+                  onClick={() => setSort("")}
+                >
+                  Newest first
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`${
+                    sort === "rooms" ? "bg-accent text-white font-bold" : ""
+                  }`}
+                  onClick={() => setSort("rooms")}
+                >
+                  Sort by rooms
+                </button>
+              </li>
+              <li>
+                <button
+                  className={`${
+                    sort === "price" ? "bg-accent text-white font-bold" : ""
+                  }`}
+                  onClick={() => setSort("price")}
+                >
+                  Sort by price
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
 

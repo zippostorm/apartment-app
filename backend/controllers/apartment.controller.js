@@ -4,7 +4,16 @@ import { Apartment } from "../models/apartment.model.js";
 
 export const getAllApartment = async (req, res) => {
   try {
-    const apartments = await Apartment.find({}).sort({ createdAt: -1 });
+    const { sortBy } = req.query;
+
+    let sortQuery = { createdAt: -1 };
+
+    if (sortBy === "rooms") {
+      sortQuery = { rooms: -1 };
+    } else if (sortBy === "price") {
+      sortQuery = { price: -1 };
+    }
+    const apartments = await Apartment.find({}).sort(sortQuery);
     res.status(200).json({ success: true, apartments });
   } catch (error) {
     res.status(500).json({

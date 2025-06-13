@@ -65,9 +65,12 @@ export const deleteApartmentImage = createAsyncThunk(
 
 export const getAllApartment = createAsyncThunk(
   "apartment/getAll",
-  async () => {
+  async (sort) => {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/apartment`
+      `${import.meta.env.VITE_API_URL}/api/apartment`,
+      {
+        params: { sortBy: sort },
+      }
     );
     return response.data;
   }
