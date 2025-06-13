@@ -34,7 +34,7 @@ const HomePage = () => {
 
         <div
           className="dropdown dropdown-end"
-          onBlur={() => setTimeout(() => setIsOpen(false), 100)}
+          onBlur={() => setTimeout(() => setIsOpen(false), 200)}
         >
           <div
             tabIndex={0}
