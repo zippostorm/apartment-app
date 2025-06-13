@@ -52,7 +52,7 @@ const ImageSlider = ({ images, apartmentId }) => {
   };
 
   return (
-    <div className="relative w-full min-h-[500px] h-full overflow-hidden rounded-lg shadow-lg bg-base-100">
+    <div className="relative w-full min-h-[500px] max-h-[700px] h-full overflow-hidden rounded-lg shadow-lg bg-base-100">
       <img
         src={images[currentIndex]?.secure_url || images[currentIndex]}
         alt={`Slide ${currentIndex + 1}`}

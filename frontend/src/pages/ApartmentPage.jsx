@@ -89,7 +89,7 @@ const ApartmentPage = () => {
           <div className="card-body">
             <h2 className="card-title text-2xl mb-4">Apartment Information</h2>
 
-            <div className="flex flex-col h-full justify-center text-lg">
+            <div className="flex flex-col justify-center text-lg">
               <div className="flex flex-col gap-9 mb-8">
                 <span className="font-medium">
                   <span className="text-primary font-bold">Title: </span>
@@ -113,56 +113,56 @@ const ApartmentPage = () => {
                   <span>{currentApartment?.price}$</span>
                 </span>
               </div>
+            </div>
 
-              <div className="flex flex-col gap-5 justify-between">
-                <button className="btn btn-primary" onClick={handleEditClick}>
-                  <Pencil />
-                  Edit
-                </button>
-                <ApartmentModal EditMode={true} />
-                <button
-                  className="btn btn-error"
-                  onClick={() =>
-                    document.getElementById("confirm_delete_modal").showModal()
-                  }
-                >
-                  <Trash2 />
-                  Delete
-                </button>
+            <div className="flex flex-col gap-5 justify-end h-full">
+              <button className="btn btn-primary" onClick={handleEditClick}>
+                <Pencil />
+                Edit
+              </button>
+              <ApartmentModal EditMode={true} />
+              <button
+                className="btn btn-error"
+                onClick={() =>
+                  document.getElementById("confirm_delete_modal").showModal()
+                }
+              >
+                <Trash2 />
+                Delete
+              </button>
 
-                <dialog id="confirm_delete_modal" className="modal">
-                  <div className="modal-box">
-                    <h3 className="font-bold text-lg">Are you sure?</h3>
-                    <p className="py-4">
-                      Do you really want to delete this apartment?
-                    </p>
-                    <div className="modal-action">
-                      <form method="dialog" className="flex gap-4">
-                        <button
-                          className="btn btn-primary"
-                          onClick={() =>
-                            document
-                              .getElementById("confirm_delete_modal")
-                              .close()
-                          }
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          className="btn btn-error"
-                          onClick={handleDeleteApartment}
-                        >
-                          Yes, delete
-                        </button>
-                      </form>
-                    </div>
+              <dialog id="confirm_delete_modal" className="modal">
+                <div className="modal-box">
+                  <h3 className="font-bold text-lg">Are you sure?</h3>
+                  <p className="py-4">
+                    Do you really want to delete this apartment?
+                  </p>
+                  <div className="modal-action">
+                    <form method="dialog" className="flex gap-4">
+                      <button
+                        className="btn btn-primary"
+                        onClick={() =>
+                          document
+                            .getElementById("confirm_delete_modal")
+                            .close()
+                        }
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="btn btn-error"
+                        onClick={handleDeleteApartment}
+                      >
+                        Yes, delete
+                      </button>
+                    </form>
                   </div>
+                </div>
 
-                  <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                  </form>
-                </dialog>
-              </div>
+                <form method="dialog" className="modal-backdrop">
+                  <button>close</button>
+                </form>
+              </dialog>
             </div>
           </div>
         </div>
