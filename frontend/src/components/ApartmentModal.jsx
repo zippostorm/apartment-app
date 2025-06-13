@@ -68,8 +68,6 @@ const ApartmentModal = ({ EditMode }) => {
       });
   };
 
-  console.log(formData);
-
   return (
     <dialog id="apartment_modal" className="modal">
       <div className="modal-box">
