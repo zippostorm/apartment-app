@@ -11,7 +11,9 @@ import ApartmentCard from "../components/ApartmentCard";
 const HomePage = () => {
   const dispatch = useDispatch();
 
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState(() => {
+    return localStorage.getItem("sortFilter") || "";
+  });
   const [isOpen, setIsOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
@@ -29,11 +31,16 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    localStorage.setItem("sortFilter", sort);
+
     dispatch(getAllApartment({ sort })).then((data) => {
       if (data?.payload?.apartments?.length >= 6) setShowMore(true);
+      else setShowMore(false);
     });
+
     dispatch(resetCurrentApartment());
   }, [dispatch, sort]);
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-end items-center mb-8">
