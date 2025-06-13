@@ -9,13 +9,20 @@ import {
   PlusCircleIcon,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFormData, resetFormData } from "../store/apartment/apartmentSlice";
+import {
+  setFormData,
+  resetFormData,
+  createApartment,
+} from "../store/apartment/apartmentSlice";
+import { toast } from "react-hot-toast";
 
 const ApartmentModal = ({ EditMode }) => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
-  const { formData, createLoading } = useSelector((state) => state.apartment);
+  const { formData, createLoading, error } = useSelector(
+    (state) => state.apartment
+  );
 
   const resetFileInputRef = () => {
     if (fileInputRef.current) {
@@ -25,8 +32,16 @@ const ApartmentModal = ({ EditMode }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(resetFormData());
-    resetFileInputRef();
+    dispatch(createApartment(formData)).then((data) => {
+      if (data?.payload?.success) {
+        document.getElementById("apartment_modal").close();
+        toast.success("Apartment created successfully");
+        dispatch(resetFormData());
+        resetFileInputRef();
+      } else {
+        toast.error("Error creating apartment:", error);
+      }
+    });
   };
 
   const handleImagesChange = (e) => {
