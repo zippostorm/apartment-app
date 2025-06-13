@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useResolvedPath } from "react-router-dom";
 import { House, PlusCircleIcon } from "lucide-react";
+import ApartmentModal from "./ApartmentModal";
 
 const Navbar = () => {
   const { pathname } = useResolvedPath();
@@ -29,12 +30,13 @@ const Navbar = () => {
               <button
                 className="btn btn-primary"
                 onClick={() =>
-                  document.getElementById("add_apartment_modal").showModal()
+                  document.getElementById("apartment_modal").showModal()
                 }
               >
                 <PlusCircleIcon className="size-5" />
                 <span className="hidden sm:inline ml-2">Add Apartment</span>
               </button>
+              <ApartmentModal EditMode={false} />
             </div>
           )}
         </div>
