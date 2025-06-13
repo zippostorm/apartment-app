@@ -15,7 +15,7 @@ const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
-  const { apartments, error, loading } = useSelector(
+  const { apartments, error, loading, createLoading } = useSelector(
     (state) => state.apartment
   );
 
@@ -121,10 +121,14 @@ const HomePage = () => {
           {showMore && (
             <div className="flex justify-center mt-8">
               <button
-                className="btn btn-primary"
+                className="btn btn-primary w-[300px]"
                 onClick={() => handleShowMore()}
               >
-                Show more
+                {createLoading ? (
+                  <div className="loading loading-spinner loading-lg" />
+                ) : (
+                  "Show more"
+                )}
               </button>
             </div>
           )}

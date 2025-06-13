@@ -116,25 +116,30 @@ const apartmentSlice = createSlice({
         state.createLoading = false;
         state.error = "Error creating apartment";
       })
-      .addCase(getAllApartment.pending, (state) => {
+      .addCase(getAllApartment.pending, (state, action) => {
+        if (action.meta.arg?.startIndex >= 6) {
+          state.createLoading = true;
+        } else {
+          state.loading = true;
+        }
         state.error = null;
       })
       .addCase(getAllApartment.fulfilled, (state, action) => {
         state.loading = false;
+        state.createLoading = false;
         if (action.meta.arg?.startIndex >= 6) {
-          // Якщо це не перше завантаження — додаємо нові
           state.apartments = [
             ...state.apartments,
             ...action.payload.apartments,
           ];
         } else {
-          // Якщо перше — просто замінюємо
           state.apartments = action.payload.apartments;
         }
         state.error = null;
       })
       .addCase(getAllApartment.rejected, (state) => {
         state.loading = false;
+        state.createLoading = false;
         state.error = "Error fetching apartments";
       })
       .addCase(getApartmentById.pending, (state) => {
