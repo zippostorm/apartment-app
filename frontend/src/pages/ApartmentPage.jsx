@@ -93,12 +93,14 @@ const ApartmentPage = () => {
               <div className="flex flex-col gap-9 mb-8">
                 <span className="font-medium">
                   <span className="text-primary font-bold">Title: </span>
-                  <span>{currentApartment?.name}</span>
+                  <span className="break-words">{currentApartment?.name}</span>
                 </span>
 
                 <span className="font-medium">
                   <span className="text-primary font-bold">Description: </span>
-                  <span>{currentApartment?.description}</span>
+                  <span className="break-words">
+                    {currentApartment?.description}
+                  </span>
                 </span>
 
                 <span className="font-medium">
