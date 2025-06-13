@@ -95,7 +95,11 @@ const ApartmentModal = ({ EditMode }) => {
       <div className="modal-box">
         <button
           className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => document.getElementById("apartment_modal").close()}
+          onClick={() => {
+            document.getElementById("apartment_modal").close();
+            dispatch(resetFormData());
+            resetFileInputRef();
+          }}
         >
           X
         </button>
