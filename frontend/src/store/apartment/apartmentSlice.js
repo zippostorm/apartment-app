@@ -40,6 +40,16 @@ export const editApartment = createAsyncThunk(
   }
 );
 
+export const deleteApartment = createAsyncThunk(
+  "apartment/delete",
+  async (id) => {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/apartment/${id}`
+    );
+    return response.data;
+  }
+);
+
 export const getAllApartment = createAsyncThunk(
   "apartment/getAll",
   async () => {
@@ -127,6 +137,18 @@ const apartmentSlice = createSlice({
       .addCase(editApartment.rejected, (state) => {
         state.createLoading = false;
         state.error = "Error editing apartment";
+      })
+      .addCase(deleteApartment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteApartment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(deleteApartment.rejected, (state) => {
+        state.loading = false;
+        state.error = "Error deleting apartment";
       });
   },
 });

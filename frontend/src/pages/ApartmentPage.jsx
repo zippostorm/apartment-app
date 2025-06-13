@@ -2,12 +2,15 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteApartment,
   getApartmentById,
+  resetCurrentApartment,
   setFormData,
 } from "../store/apartment/apartmentSlice";
 import { ArrowLeftIcon, Pencil, Trash2 } from "lucide-react";
 import ImageSlider from "../components/ImageSlider";
 import ApartmentModal from "../components/ApartmentModal";
+import toast from "react-hot-toast";
 
 const ApartmentPage = () => {
   const { id } = useParams();
@@ -30,6 +33,19 @@ const ApartmentPage = () => {
     );
 
     document.getElementById("apartment_modal").showModal();
+  };
+
+  const handleDeleteApartment = () => {
+    dispatch(deleteApartment(id)).then((data) => {
+      if (data?.payload?.success) {
+        toast.success("Apartment deleted successfully");
+        dispatch(resetCurrentApartment());
+        document.getElementById("confirm_delete_modal").close();
+        navigate("/");
+      } else {
+        toast.error("Error deleting apartment:", error);
+      }
+    });
   };
   useEffect(() => {
     dispatch(getApartmentById(id));
@@ -111,6 +127,39 @@ const ApartmentPage = () => {
                   <Trash2 />
                   Delete
                 </button>
+
+                <dialog id="confirm_delete_modal" className="modal">
+                  <div className="modal-box">
+                    <h3 className="font-bold text-lg">Are you sure?</h3>
+                    <p className="py-4">
+                      Do you really want to delete this apartment?
+                    </p>
+                    <div className="modal-action">
+                      <form method="dialog" className="flex gap-4">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() =>
+                            document
+                              .getElementById("confirm_delete_modal")
+                              .close()
+                          }
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="btn btn-error"
+                          onClick={handleDeleteApartment}
+                        >
+                          Yes, delete
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                  </form>
+                </dialog>
               </div>
             </div>
           </div>
