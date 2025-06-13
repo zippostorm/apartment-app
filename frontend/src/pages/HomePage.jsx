@@ -33,7 +33,7 @@ const HomePage = () => {
         </button>
 
         <div
-          className="dropdown"
+          className="dropdown dropdown-end"
           onBlur={() => setTimeout(() => setIsOpen(false), 100)}
         >
           <div
