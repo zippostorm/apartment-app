@@ -53,10 +53,11 @@ const ApartmentModal = ({ EditMode }) => {
           )
         : dispatch(createApartment(formData)).then((data) => {
             if (data?.payload?.success) {
+              const currentSort = localStorage.getItem("sortFilter") || "";
               document.getElementById("apartment_modal").close();
               toast.success("Apartment created successfully");
               dispatch(resetFormData());
-              dispatch(getAllApartment());
+              dispatch(getAllApartment({ sort: currentSort }));
               resetFileInputRef();
             } else {
               toast.error("Error creating apartment:", error);
