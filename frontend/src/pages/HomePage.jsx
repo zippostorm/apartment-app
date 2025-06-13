@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getAllApartment } from "../store/apartment/apartmentSlice";
+import {
+  getAllApartment,
+  resetCurrentApartment,
+} from "../store/apartment/apartmentSlice";
 import { PackageIcon, RefreshCwIcon } from "lucide-react";
 import ApartmentCard from "../components/ApartmentCard";
 
@@ -15,7 +18,8 @@ const HomePage = () => {
   console.log(apartments);
   useEffect(() => {
     dispatch(getAllApartment());
-  }, []);
+    dispatch(resetCurrentApartment());
+  }, [dispatch]);
   return (
     <main className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">

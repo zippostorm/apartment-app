@@ -7,6 +7,7 @@ import {
   MessageSquareMore,
   Image,
   PlusCircleIcon,
+  PencilIcon,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,6 +15,8 @@ import {
   resetFormData,
   createApartment,
   getAllApartment,
+  getApartmentById,
+  editApartment,
 } from "../store/apartment/apartmentSlice";
 import { toast } from "react-hot-toast";
 
@@ -21,7 +24,7 @@ const ApartmentModal = ({ EditMode }) => {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
-  const { formData, createLoading, error } = useSelector(
+  const { formData, createLoading, error, currentApartment } = useSelector(
     (state) => state.apartment
   );
 
@@ -33,17 +36,33 @@ const ApartmentModal = ({ EditMode }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createApartment(formData)).then((data) => {
-      if (data?.payload?.success) {
-        document.getElementById("apartment_modal").close();
-        toast.success("Apartment created successfully");
-        dispatch(resetFormData());
-        dispatch(getAllApartment());
-        resetFileInputRef();
-      } else {
-        toast.error("Error creating apartment:", error);
-      }
-    });
+    {
+      EditMode
+        ? dispatch(editApartment({ id: currentApartment?._id, formData })).then(
+            (data) => {
+              if (data?.payload?.success) {
+                document.getElementById("apartment_modal").close();
+                toast.success("Apartment updated successfully");
+                dispatch(resetFormData());
+                dispatch(getApartmentById(currentApartment?._id));
+                resetFileInputRef();
+              } else {
+                toast.error("Error updating apartment:", error);
+              }
+            }
+          )
+        : dispatch(createApartment(formData)).then((data) => {
+            if (data?.payload?.success) {
+              document.getElementById("apartment_modal").close();
+              toast.success("Apartment created successfully");
+              dispatch(resetFormData());
+              dispatch(getAllApartment());
+              resetFileInputRef();
+            } else {
+              toast.error("Error creating apartment:", error);
+            }
+          });
+    }
   };
 
   const handleImagesChange = (e) => {
@@ -228,7 +247,7 @@ const ApartmentModal = ({ EditMode }) => {
                 !formData.description ||
                 !formData.price ||
                 !formData.rooms ||
-                formData.images.length === 0 ||
+                (!EditMode && formData.images.length === 0) ||
                 createLoading
               }
             >
@@ -236,8 +255,16 @@ const ApartmentModal = ({ EditMode }) => {
                 <span className="loading loading-spinner loading-sm" />
               ) : (
                 <>
-                  <PlusCircleIcon className="size-5 mr-2" />
-                  Add Apartment
+                  {EditMode ? (
+                    <>
+                      <PencilIcon className="size-5 mr-2" /> Edit Apartment
+                    </>
+                  ) : (
+                    <>
+                      <PlusCircleIcon className="size-5 mr-2" />
+                      Add Apartment
+                    </>
+                  )}
                 </>
               )}
             </button>

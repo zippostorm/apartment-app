@@ -28,11 +28,33 @@ export const createApartment = createAsyncThunk(
   }
 );
 
+export const editApartment = createAsyncThunk(
+  "apartment/edit",
+  async ({ id, formData }) => {
+    console.log(formData, id);
+    const response = await axios.patch(
+      `${import.meta.env.VITE_API_URL}/api/apartment/${id}`,
+      formData
+    );
+    return response.data;
+  }
+);
+
 export const getAllApartment = createAsyncThunk(
   "apartment/getAll",
   async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/apartment`
+    );
+    return response.data;
+  }
+);
+
+export const getApartmentById = createAsyncThunk(
+  "apartment/getById",
+  async (id) => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/apartment/${id}`
     );
     return response.data;
   }
@@ -48,6 +70,10 @@ const apartmentSlice = createSlice({
 
     resetFormData: (state) => {
       state.formData = initialState.formData;
+    },
+
+    resetCurrentApartment: (state) => {
+      state.currentApartment = null;
     },
   },
   extraReducers: (builder) => {
@@ -76,9 +102,35 @@ const apartmentSlice = createSlice({
       .addCase(getAllApartment.rejected, (state) => {
         state.loading = false;
         state.error = "Error fetching apartments";
+      })
+      .addCase(getApartmentById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getApartmentById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentApartment = action.payload.apartment;
+        state.error = null;
+      })
+      .addCase(getApartmentById.rejected, (state) => {
+        state.loading = false;
+        state.error = "Error fetching apartment";
+      })
+      .addCase(editApartment.pending, (state) => {
+        state.createLoading = true;
+        state.error = null;
+      })
+      .addCase(editApartment.fulfilled, (state, action) => {
+        state.createLoading = false;
+        state.error = null;
+      })
+      .addCase(editApartment.rejected, (state) => {
+        state.createLoading = false;
+        state.error = "Error editing apartment";
       });
   },
 });
 
-export const { setFormData, resetFormData } = apartmentSlice.actions;
+export const { setFormData, resetFormData, resetCurrentApartment } =
+  apartmentSlice.actions;
 export default apartmentSlice.reducer;
