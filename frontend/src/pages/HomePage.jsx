@@ -5,7 +5,7 @@ import {
   getAllApartment,
   resetCurrentApartment,
 } from "../store/apartment/apartmentSlice";
-import { PackageIcon, RefreshCwIcon } from "lucide-react";
+import { PackageIcon } from "lucide-react";
 import ApartmentCard from "../components/ApartmentCard";
 
 const HomePage = () => {
@@ -15,7 +15,7 @@ const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
-  const { apartments, error, loading, createLoading } = useSelector(
+  const { apartments, error, loading, paginationLoading } = useSelector(
     (state) => state.apartment
   );
 
@@ -124,7 +124,7 @@ const HomePage = () => {
                 className="btn btn-primary w-[300px]"
                 onClick={() => handleShowMore()}
               >
-                {createLoading ? (
+                {paginationLoading ? (
                   <div className="loading loading-spinner loading-lg" />
                 ) : (
                   "Show more"

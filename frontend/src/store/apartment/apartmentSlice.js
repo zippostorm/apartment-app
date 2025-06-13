@@ -5,6 +5,7 @@ const initialState = {
   apartments: [],
   loading: false,
   createLoading: false,
+  paginationLoading: false,
   currentApartment: null,
   error: null,
 
@@ -118,7 +119,7 @@ const apartmentSlice = createSlice({
       })
       .addCase(getAllApartment.pending, (state, action) => {
         if (action.meta.arg?.startIndex >= 6) {
-          state.createLoading = true;
+          state.paginationLoading = true;
         } else {
           state.loading = true;
         }
@@ -126,7 +127,7 @@ const apartmentSlice = createSlice({
       })
       .addCase(getAllApartment.fulfilled, (state, action) => {
         state.loading = false;
-        state.createLoading = false;
+        state.paginationLoading = false;
         if (action.meta.arg?.startIndex >= 6) {
           state.apartments = [
             ...state.apartments,
@@ -139,7 +140,7 @@ const apartmentSlice = createSlice({
       })
       .addCase(getAllApartment.rejected, (state) => {
         state.loading = false;
-        state.createLoading = false;
+        state.paginationLoading = false;
         state.error = "Error fetching apartments";
       })
       .addCase(getApartmentById.pending, (state) => {
